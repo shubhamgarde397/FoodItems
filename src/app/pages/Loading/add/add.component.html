@@ -1,0 +1,90 @@
+<div class="well">
+  <form [formGroup]="myFormGroup" (ngSubmit)="store(myFormGroup)">
+
+    <!--LoadingDate-->
+    <div class="form-group row">
+      <div class="col-xs-5">
+        <label>Loading Date</label>
+        <input type="date" class="form-control" formControlName="loadingDate">
+      </div>
+    </div>
+    <!--LoadingDate-->
+
+
+    <!--TruckNo-->
+    <div class="form-group row">
+      <div class="col-xs-5">
+        <label>Truck No</label>
+        <select class="form-control" formControlName="truckid">
+          <option selected>Select Truck</option>
+          <option *ngFor="let i of trucks">{{i.truckno}}</option>
+        </select>
+      </div>
+      <div class="col-xs-1" style="cursor: pointer; margin-top: 3vh;"><i class="material-icons" (click)="getTrucks()">autorenew</i></div>
+    </div>
+    <!--TruckNo-->
+
+      <!--Place-->
+      <div class="form-group row">
+        <div class="col-xs-5">
+          <label>From</label>
+          <select class="form-control" formControlName="placeidfrom">
+            <option selected>Select Place</option>
+            <option *ngFor="let i of places" value={{i._id}}>{{i.village_name}}</option>
+          </select>
+        </div>
+        <div class="col-xs-1" style="cursor: pointer; margin-top: 3vh;">
+          <i class="material-icons" (click)="getVillages()">autorenew</i>
+        </div>
+      </div>
+      <!--Place-->
+
+       <!--Place-->
+       <div class="form-group row">
+        <div class="col-xs-5">
+          <label>To</label>
+          <select class="form-control" formControlName="placeidto" (change)="getDA()">
+            <option selected>Select Place</option>
+            <option *ngFor="let i of places" value={{i.village_name}}>{{i.village_name}}</option>
+          </select>
+        </div>
+      </div>
+      <!--Place-->
+
+      <!--LRNO-->
+      <div class="form-group row">
+        <div class="col-xs-5">
+          <label>LRNO</label>
+          <input type="text" class="form-control" formControlName="lrno">
+        </div>
+      </div>
+      <!--LRNO-->
+
+       <!--diesel-->
+       <div class="form-group row">
+        <div class="col-xs-5">
+          <label>Diesel</label>
+          <input type="text" class="form-control" formControlName="diesel" [(ngModel)]="diesel">
+        </div>
+      </div>
+      <!--diesel-->
+
+       <!--amount-->
+       <div class="form-group row">
+        <div class="col-xs-5">
+          <label>Expense</label>
+          <input type="text" class="form-control" formControlName="amount">
+        </div>
+      </div>
+      <!--amount-->
+
+    <div class="row">
+      <div class="form-group" class="col-xs-2"></div>
+      <div class="form-group" class="col-xs-1">
+        <button type="submit" class="btn btn-primary" [disabled]='!myFormGroup.valid'>
+          <i class="material-icons">send</i>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
