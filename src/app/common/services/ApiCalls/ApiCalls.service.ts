@@ -27,8 +27,7 @@ export class ApiCallsService {
 
   handleData_New_python(api, apiCall, formBody = {}, code,todayDate=this.handlefunction.createDate(new Date())) {
     formBody['todayDate']=todayDate;
-    formBody['website'] = 'mrl';
-    formBody['mrlid'] = this.securityCheck.mrlid;
+    formBody['website'] = 'food';
     this.headerPost = new HttpHeaders();
     this.headerPost.append('Content-Type', 'application/json');
     this.URL = this.getfullapi.getFullAPI(api);

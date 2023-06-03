@@ -4,14 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SecurityCheckService {
-  public yearNames = [];
-  public monthNames;
-  public mrlid;
-  public commonBalanceHire = [];
-  public commonArray = {
-    "trucks": [{}],
-    "places": [{}]
-  }
+  public gymid;
   public AUTH = false;
   public username;
   public dname;
@@ -21,35 +14,9 @@ export class SecurityCheckService {
   public typeofuser = 3;
   public amountShow=false;
   constructor() {
-    this.yearNames = this.generateYears();
-  }
-
-  setAmountShow(data){
-this.amountShow=data;
-  }
-  getAmountShow(){
-    return this.amountShow;
   }
 
 
-  authenticate(a) {
-    if (a === 'hi') {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  generateYears() {
-    let startYear = 2019
-    let currentYear = new Date().getFullYear();
-    let toAdd = currentYear - startYear;
-    let arr = [2019];
-    for (let i = 0; i < toAdd; i++) {
-      arr.push(startYear + i + 1)
-    }
-    return arr;
-  }
   setUsername(username) {
     this.username = username;
   }
@@ -63,8 +30,8 @@ this.amountShow=data;
   setUserName(data){
     this.username2=data;
   }
-  setMRLid(data){
-    this.mrlid=data;
+  setGYMid(data){
+    this.gymid=data;
   }
 
   setRole(role) {

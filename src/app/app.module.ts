@@ -10,7 +10,6 @@ import { NavigationComponent } from './pages/navigation/navigation.component';
 import { MatFormFieldModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
-import {LoginComponent} from './pages/login/login.component'
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { getFullApi } from './common/services/ApiCalls/getFullApi.service';
 import { handleFunction } from './common/services/functions/handleFunctions';
@@ -30,7 +29,6 @@ import {
   MatSidenavModule
 } from '@angular/material';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +37,6 @@ import {
     DrawerComponent,
     PageNotFoundComponent,
     MainPageComponent,
-    LoginComponent
   
   ],
   imports: [

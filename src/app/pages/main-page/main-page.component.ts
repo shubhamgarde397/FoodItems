@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiCallsService } from '../../common/services/ApiCalls/ApiCalls.service';
+import { HandleDataService } from '../../common/services/Data/handle-data.service';
+import { SecurityCheckService } from 'src/app/common/services/Data/security-check.service';
+import { handleFunction } from 'src/app/common/services/functions/handleFunctions';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ApiCallsService } from '../../common/services/ApiCalls/ApiCalls.service';
-import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
-import { SecurityCheckService } from '../../common/services/Data/security-check.service';
-import { HandleDataService } from 'src/app/common/services/Data/handle-data.service';
-import { PassDataService } from 'src/app/pass-data.service';
-
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
@@ -16,79 +12,101 @@ import { PassDataService } from 'src/app/pass-data.service';
   providers: [ApiCallsService]
 })
 export class MainPageComponent implements OnInit {
-  public username: any;
-  public password: any;
-  public otp: any;
-  public show = true;
+  public todayDate;
+  
+  public data=[];
+  
   public myFormGroup: FormGroup;
-  public response: any;
-  public logindetailslist;
-  public financialYear;
-  public dbName = 'PochDetails';
-  public isLoginSuccess = false;
-  public userTypeHTML;
-  public userTypeTS;
-  public modalUser = false;
-  public loginButton = false;
-  public logging=true;
+  public display=false;
+public rArr=[];
+public reason=''
+public hugeData={'food':'','reason':[]}
+public adder=[];
   constructor(
-    public router: Router,
     public apiCallservice: ApiCallsService,
-    public formBuilder: FormBuilder,
-    public hd:HandleDataService,
-    public spinnerService: Ng4LoadingSpinnerService,
-    public security: SecurityCheckService,
-    private obs:PassDataService
-  ) {
-
-  }
+    public handledata: HandleDataService,
+    public sec: SecurityCheckService,
+    public handleF:handleFunction,
+    public formBuilder: FormBuilder
+  ) { }
 
   ngOnInit() {
-this.myFormGroup = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+    
+
+    this.todayDate=this.handleF.createDate(new Date());
+    this.myFormGroup = this.formBuilder.group({
+      food: '',
+      eatable: '',
+      reason:''
     });
   }
-  setUser() {
-    this.userTypeTS = this.userTypeHTML;
-      this.loginButton = false;
-      this.myFormGroup.controls['username'].enable();
-      this.myFormGroup.controls['password'].enable();
+
+  saveData(i){
+    this.hugeData=i;
+    console.log(this.hugeData);
+    
   }
 
-  login({ value }: { value}) {
+  clicker(data){
+    switch (data) {
+      case 'add':
+        this.display=false;
+        break;
 
-      this.security.setUsername(value['username']);
-    this.logging=false;
-      value['method'] = 'login';
-      value['username']=value.username
-      value['password']=value.password
-      value['tablename']=''
-      this.apiCallservice.handleData_New_python
-        ('commoninformation', 1, value, 0)
-        .subscribe((res: any) => {
-          this.logging=true;
-          if(res['Login']){
-            this.security.setDisplayname(res['Data'][0]['displayName']);
-            this.security.setUserid(res['Data'][0]['_id']);
-            this.security.setUserName(res['Data'][0]['name']);
-            this.security.setMRLid(res['Data'][0]['mrlid']);
-            if(this.entry(res['Data'])){
-            this.isLoginSuccess=true;
-            this.obs.updateApprovalMessage(res);
-            this.router.navigate(['Navigation']);
-            console.log('navigated');
-            
-            }else{
-              alert('Contact Admin for registration!')
-            }
-          }
-          else{
-            alert('Contact Admin for registration!')
-          }
-        });
+        case 'get':
+          this.display=true;
+          this.find();
+        break;
+    }
   }
-  entry(data){
-    return data.find(r=>{return r.type==='mrl'})? true:false
+
+find(){
+        let tempObj1={};
+    tempObj1['method'] = 'getFoods'
+      this.apiCallservice.handleData_New_python('commoninformation', 1, tempObj1, true,this.handleF.createDate(new Date()))
+      .subscribe((res: any) => {
+        this.data=res.Data;
+        
+      });
+
+}
+
+  store(data) {
+    data.value['method'] = 'insert';
+    data.value['reason'] = this.rArr;
+    data.value['eatable'] = data.value['eatable']===''?false:data.value['eatable'];
+    this.apiCallservice.handleData_New_python
+      ('commoninformation',
+       1, data.value, true)
+      .subscribe((res: any) => {
+        alert(res['Status']);
+      });
+  }
+
+  addMore() {
+    this.rArr.push(this.myFormGroup.value.reason)
+    this.reason = '';
+  }
+  addMoreC() {
+    this.hugeData['reason'].push(this.reason)
+    this.adder.push(this.reason)
+    this.reason = '';
+  }
+  
+
+  update(){
+    let data={}
+    data['method'] = 'update';
+    data['_id'] = this.hugeData['_id'];
+    data['reason'] = this.adder;
+    this.apiCallservice.handleData_New_python
+      ('commoninformation',
+       1, data, true)
+      .subscribe((res: any) => {
+        alert(res['Status']);
+      });
+  }
+  delete(j){
+    this.rArr.splice(j,1);
   }
 }
